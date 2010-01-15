@@ -1,0 +1,186 @@
+{template header}
+
+<!--{if !empty($message)}-->
+<script type="text/javascript" onload="1">
+InFloat = 'floatlayout_gfcregister';
+pagescroll.right();
+{eval $bbname = str_replace('\'', '\\\'', $bbname);}
+{if $regverify == 1}
+  $('messageleft1').innerHTML = '<h1>{lang register_succeed} $bbname</h1>{lang profile_email_verify}';
+  $('messageright1').innerHTML = '<h1><a href="memcp.php">{lang user_center}</a></h1><p>{lang profile_email_verify_comment}</p>';
+  setTimeout("window.location.href='memcp.php'", $mrefreshtime);
+{elseif $regverify == 2}
+  $('messageleft1').innerHTML = '<h1>{lang register_succeed} $bbname</h1>{lang register_manual_verify}';
+  ('messageright1').innerHTML = '<h1><a href="memcp.php">{lang user_center}</a></h1>';
+  setTimeout("window.location.href='memcp.php'", $mrefreshtime);
+{else}
+  {if $newbietask}
+    $('messageleft1').innerHTML = '<h1>{lang register_succeed} $bbname</h1>{lang register_newbietask}';
+    $('messageright1').innerHTML = '<h1><a href="javascript:;" onclick="location.href=\'task.php?action=view&id=$task[taskid]\'">{lang login_refresh}</a></h1>';
+    setTimeout('location.href=\'task.php?action=view&id=$task[taskid]\'', $mrefreshtime);
+  {else}
+    $('messageleft1').innerHTML = '<h1>{lang register_succeed} $bbname</h1>';
+    $('messageright1').innerHTML = '<h1><a href="javascript:;" onclick="location.reload()">{lang login_refresh}</a></h1>';
+    setTimeout('location.reload()', $mrefreshtime);
+  {/if}
+{/if}
+{if $_DCACHE['settings']['frameon'] && $_DCOOKIE['frameon'] == 'yes'}
+  if(top != self) {
+    parent.leftmenu.location.reload();
+  }
+{/if}
+floatwinreset = 1;
+</script>
+<!--{else}-->
+<!--{if empty($infloat)}-->
+  {subtemplate header_nofloat}
+<!--{/if}-->
+<div class="float" id="floatlayout_gfcregister" style="width: 600px;{if !empty($infloat)} height: 400px;{/if}">
+  <div style="width: 1800px">
+  <div class="floatbox floatbox1">
+    <h3 class="float_ctrl">
+    <span>
+      <!--{if !empty($infloat)}--><a href="javascript:;" class="float_close" onclick="floatwin('close_gfcregister')" title="{lang close}">{lang close}</a><!--{/if}-->
+    </span>
+    </h3>
+    <div id="bbrule" class="gateform">
+      <h3>$bbname {lang rulemessage}</h3>
+      <div class="clause">$bbrulestxt</div>
+      <button onclick="$('agreebbrule').checked = true;$('bbrule').style.display='none';pagescroll.right()">{lang agree}</button> &nbsp; <button onclick="floatwin('close_gfcregister')">{lang disagree}</button>
+    </div>
+  </div>
+  <div class="floatbox floatbox1">
+    <h3 class="float_ctrl">
+      <span>
+        <!--{if !empty($infloat)}--><a href="javascript:;" class="float_close" onclick="floatwin('close_gfcregister')" title="{lang close}">{lang close}</a><!--{/if}-->
+      </span>
+    </h3>
+    <form method="post" name="gfcregister" id="gfcregisterform" class="gateform" onsubmit="return checkGFCsubmit();" action="gfcregister.php?regsubmit=yes">
+      <h3 id="returnmessage4">$gfcregister</h3>
+      <input type="hidden" name="formhash" value="{FORMHASH}" />
+      <input type="hidden" name="referer" value="$referer" />
+      <!--{if !empty($infloat)}--><input type="hidden" name="handlekey" value="$handlekey" /><!--{/if}-->
+       <div class="loginform regform">
+        <div id="reginfo_a" class="regform" style="overflow:hidden">
+          <span id="activation_hidden">
+          <label><em>{lang username}:</em><input type="text" id="username" name="username" value="{$gfcusername}" autocomplete="off" size="25" maxlength="15" value="" onBlur="checkusername()" tabindex="1" class="txt" /> *</label>
+          <label><em>{lang email}:</em><input type="text" name="email" autocomplete="off" size="25" id="email" value="{$gfcemail}" onBlur="checkemail()" tabindex="1" class="txt" /> *</label>
+          </span>
+        </div>
+      </div>
+      <p class="fsubmit">
+        <span id="reginfo_a_btn">
+          <em>&nbsp;</em>
+        <!--{if ($field && !empty($infloat)) || $regverify == 2}-->
+          <button class="submit" tabindex="1" onclick="regstep('reginfo_a','reginfo_b'); return false;">{lang register_next}</button>
+        </span>
+        <span id="reginfo_b_btn" style="display:none">
+          <em class="regpre"><a href="javascript:;" onclick="regstep('reginfo_b','reginfo_a');">{lang register_pre}</a></em>
+        <!--{/if}-->
+          <button class="submit" id="registerformsubmit" type="submit" name="regsubmit" value="true" tabindex="1">{lang submit}</button>
+          <!--{if $bbrules}-->
+            <input type="checkbox" class="checkbox" name="agreebbrule" value="$bbrulehash" id="agreebbrule" /> <label for="agreebbrule">{lang agree}<a href="javascript:;" onclick="pagescroll.left()">{lang rulemessage}</a></label>
+          <!--{/if}-->
+        </span>
+      </p>
+    </form>
+  </div>
+  <div class="floatbox floatbox1">
+    <h3 class="float_ctrl">
+      <span>
+        <!--{if !empty($infloat)}--><a href="javascript:;" class="float_close" onclick="floatwin('close_gfcregister')" title="{lang close}">{lang close}</a><!--{/if}-->
+      </span>
+    </h3>
+    <div class="validateinfo">
+      <div id="messageleft1"></div>
+      <div id="messageright1"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" reload="1">
+var pagescroll = new pagescroll_class('floatlayout_gfcregister', 600, 400);
+{if empty($infloat)}
+  $('floatlayout_gfcregister').scrollLeft = 600;
+{/if}
+document.body.focus();
+$('username').focus();
+
+{if $sitemessage[register] && $sitemessage[time]}
+setTimeout('display_opacity(\'custominfo_gfcregister\',100)', $sitemessage[time]);
+{/if}
+
+var profile_username_toolong = '{lang register_profile_username_toolong}';
+var profile_username_tooshort = '{lang register_profile_profile_username_tooshort}';
+var doublee = parseInt('$doublee');
+var lastusername = lastpassword = lastemail = lastinvitecode = '';
+
+function messagehandle_register(key, msg) {
+  $('returnmessage4').className = key == 1 ? 'onerror' : '';
+  $('returnmessage4').innerHTML = msg;
+}
+
+function checkusername() {
+  var username = trim($('username').value);
+  if(username == '' || username == lastusername) {
+    return;
+  } else {
+    lastusername = username;
+  }
+  var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
+  if(unlen < 3 || unlen > 15) {
+    messagehandle_register(1, unlen < 3 ? profile_username_tooshort : profile_username_toolong);
+    return;
+  }
+  ajaxget('ajax.php?infloat=register&handlekey=register&action=checkusername&username=' + (is_ie && document.charset == 'utf-8' ? encodeURIComponent(username) : username), 'returnmessage4');
+}
+
+function checkGFCsubmit() {
+  var email = trim($('email').value);
+  var pattern = /^[\w\.\-]+@[\w\.\-]+(\.\w+)+$/;
+  if (!pattern.test(email)) {
+    messagehandle_register(1, "$registererroremail");
+    return false;
+  }
+  var username = trim($('username').value);
+  var url = 'gfccheck.php?action=checkusername&username=' + (is_ie && document.charset == 'utf-8' ? encodeURIComponent(username) : username);
+  var status = false;
+  var ajax = new createXMLHttpRequest();
+  ajax.open("GET",url,false);
+  ajax.send(null);
+  if (ajax.responseText == "1") {
+    status = true;
+  } else if (ajax.responseText == "0") {
+    messagehandle_register(1, "$registererrorusername");
+    status = false;
+   } else {
+     alert(ajax.responseText);
+  }
+  return status;
+}
+function checkemail() {
+  var email = trim($('email').value);
+  if(email == '' || email == lastemail) {
+    return;
+  } else {
+    lastemail = email;
+  }
+  ajaxget('ajax.php?infloat=register&handlekey=register&action=checkemail&email=' + email, 'returnmessage4');
+}
+function trim(str) {
+  return str.replace(/^\s*(.*?)[\s\n]*$/g, '$1');
+}
+{if ($field && !empty($infloat)) || $regverify == 2}
+function regstep(obja,objb){
+  $(obja).style.display = $(obja+'_btn').style.display = 'none';
+  $(objb).style.display = $(objb+'_btn').style.display = '';
+}
+{/if}
+</script>
+<!--{/if}-->
+
+{eval updatesession();}
+<!--{if empty($infloat)}-->
+  {subtemplate footer_nofloat}
+<!--{/if}-->
+{template footer}

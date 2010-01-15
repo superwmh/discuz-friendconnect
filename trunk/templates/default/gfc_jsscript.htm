@@ -1,0 +1,158 @@
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load('friendconnect', '0.8');
+</script>
+<!--{eval require_once DISCUZ_ROOT.'./plugins/gfc/common.php' }-->
+<script type="text/javascript">
+function loadGoogleFriendConnect() {
+  google.friendconnect.container.setParentUrl('{$gfcconfig["sitepath"]}');
+  google.friendconnect.container.initOpenSocialApi({
+    site: '{$gfcconfig["siteid"]}',
+    onload: function(securityToken) { initAllData(securityToken); }
+  });
+}
+function createXMLHttpRequest() {
+  var request = false;
+  if (window.XMLHttpRequest) {
+    request = new XMLHttpRequest();    
+  } else if (window.ActiveXObject) {
+    var versions = ['Microsoft.XMLHTTP', 'MSXML.XMLHTTP', 'Microsoft.XMLHTTP',
+                    'Msxml2.XMLHTTP.7.0', 'Msxml2.XMLHTTP.6.0', 'Msxml2.XMLHTTP.5.0',
+                    'Msxml2.XMLHTTP.4.0', 'MSXML2.XMLHTTP.3.0', 'MSXML2.XMLHTTP'];
+    for (var i = 0; i < versions.length; i++) {
+      try {
+        request = new ActiveXObject(versions[i]);
+        if (request) {
+          return request;
+        }
+      } catch (e) {}
+    }
+  }
+  return request;
+}
+function initAllData(securityToken) {
+  var req = opensocial.newDataRequest();
+  req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
+  req.send(setupData);
+}
+
+function setupData(data) {
+  var viewer = data.get('viewer').getData();
+  if (viewer) {
+    var links = document.links;
+    var foundlogout = false;
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      if (link.href.indexOf('action=logout') > -1) {
+        foundlogout = true;
+        link.onclick = function() {
+          google.friendconnect.requestSignOut();
+        }
+        break;
+      }
+    }
+    var logout_str = "";
+    if (!foundlogout) {
+      logout_str = '<a href="#" onclick="google.friendconnect.requestSignOut();">{$gfcsignout}</a>';
+    }
+    document.getElementById('friend_connect_gadget').innerHTML =
+      logout_str + '| ' + 
+      '<a href="#" onclick="google.friendconnect.requestSettings()">{$gfcsettings}</a> | ' +
+      '<a href="#" onclick="google.friendconnect.requestInvite()">{$gfcinvite}</a> ' ;
+    {if $discuz_uid > 0}
+    if (document.cookie.indexOf('gfcupdateprofilepre') != -1) {
+      var expires = new Date();
+      expires.setTime(expires.getTime()-365*24*60*60*1000);
+      document.cookie = 'gfcupdateprofilepre=1;expires='+expires.toUTCString();
+      document.cookie = 'gfcupdateprofile=1';
+    } else if (document.cookie.indexOf('gfcupdateprofile') != -1) {
+      var expires = new Date();
+      expires.setTime(expires.getTime()-365*24*60*60*1000);
+      document.cookie = 'gfcupdateprofile=1;expires='+expires.toUTCString();
+      var url='gfccheck.php?action=checkprofile';
+      var ajax = new createXMLHttpRequest();
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+          if (ajax.status == 200) {
+            if (ajax.responseText == "1") {
+              floatwin('open_gfcprofile', "gfcprofile.php", 600, 400, '600,0');
+            } else if (ajax.responseText == "0"){
+            } else {
+              alert(ajax.responseText);
+            }
+          }
+        }
+      }
+      ajax.open("GET",url);
+      ajax.send(null);
+    }
+    if (document.cookie.indexOf('gfcsyncprofile') != -1) {
+    	var expires = new Date();
+    	expires.setTime(expires.getTime()-365*24*60*60*1000);
+    	document.cookie = 'gfcsyncprofile=1;expires='+expires.toUTCString();
+      var url='gfcprofile.php?action=ajaxupdate';
+      var ajax = new createXMLHttpRequest();
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+          if (ajax.status == 200) {
+            if (ajax.responseText == "1") {
+            } else if (ajax.responseText == "0"){
+            } else {
+              alert(ajax.responseText);
+            }
+          }
+        }
+      }
+      ajax.open("GET",url);
+      ajax.send(null);
+    }
+    {else}
+      var url='gfccheck.php?action=checkgfcid';
+      var ajax = new createXMLHttpRequest();
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+          if (ajax.status == 200) {
+            if (ajax.responseText == "1") {
+              if (is_ie) {
+                referer = document.location.pathname + document.location.search + document.location.hash;
+                window.top.location.href = "gfcauth.php?referer="+encodeURIComponent(referer);
+              } else {
+                window.top.location.href = "gfcauth.php";
+              }
+            } else if (ajax.responseText == "0"){
+              floatwin('open_gfcregister', "gfcregister.php", 600, 400, '600,0');
+            } else {
+              alert(ajax.responseText);
+            }
+          }
+        }
+      }
+      ajax.open("GET",url);
+      ajax.send(null);
+    {/if}
+  } else {
+    {if $discuz_uid > 0}
+    document.getElementById('friend_connect_gadget').innerHTML = '';
+    {else}
+    google.friendconnect.renderSignInButton({id: 'friend_connect_gadget',
+                                             style: 'long', text: '{$gfcbuttontext}'});
+    {/if}
+  }
+}
+if (window.addEventListener) {
+  window.addEventListener('load', loadGoogleFriendConnect, false);
+} else if (window.attachEvent) {
+  window.attachEvent('onload', loadGoogleFriendConnect);
+} else {
+  var onloadfunc = window.onload;
+  if (typeof window.onload != 'function') {
+    window.onload = loadGoogleFriendConnect;
+  } else {
+    window.onload = function() {
+      onloadfunc();
+      loadGoogleFriendConnect();
+    }
+  }
+}
+</script>
