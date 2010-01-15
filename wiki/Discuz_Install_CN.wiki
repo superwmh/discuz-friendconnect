@@ -12,7 +12,7 @@
     # 输入您网站的名称和主页网址(在本指南中将以[http://youdomainname.com/yourpath/]为例，youdomainname.com为您服务器的域名或IP，yourpath为您的论坛的路径)，并选择您的网站的语言。完成之后点击继续；
 
 == 二：下载Google Friend Conenct Plugin for Discuz! 7.0 ==
-从[http://code.google.com/p/google-friend-connect-plugins/downloads/list 项目主页]下载最新版本的Google Friend Conenct Plugin for Discuz!。将下载的zip解压缩到本地，该插件应该有如下的结构：
+从[http://code.google.com/p/discuz-friendconnect/downloads/list 项目主页]下载最新版本的Google Friend Conenct Plugin for Discuz!。将下载的zip解压缩到本地，该插件应该有如下的结构：
 <pre>
 .
 |
@@ -113,6 +113,6 @@
 
 === 更多资讯 ===
 
-如您有问题或建议，请访问：[http://code.google.com/p/google-friend-connect-plugins/issues/list]。
+如您有问题或建议，请访问：[http://code.google.com/p/discuz-friendconnect/issues/list]。
 
-更多资讯请参考用户手册：[http://code.google.com/p/google-friend-connect-plugins/wiki/Discuz_Manual_CN]。
+更多资讯请参考用户手册：[http://code.google.com/p/discuz-friendconnect/wiki/Discuz_Manual_CN]。

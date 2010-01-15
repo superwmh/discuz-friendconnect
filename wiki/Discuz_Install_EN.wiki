@@ -7,10 +7,10 @@
 == Step 1: Install Friend Connect and get your Site ID ==
     # Sign up for Google Friend Connect at [http://www.google.com/friendconnect].
     # Get your Site ID. 
-See [http://code.google.com/p/google-friend-connect-plugins/wiki/InstallFriendConnect InstallFriendConnect] for details.
+See [http://code.google.com/p/discuz-friendconnect/wiki/InstallFriendConnect InstallFriendConnect] for details.
 
 == Step 2: Get Google Friend Connect for Discuz! 7.0 ==
-Get the latest version of the plugin at [http://code.google.com/p/google-friend-connect-plugins/downloads/list]. After unzipping it, it should look like this:
+Get the latest version of the plugin at [http://code.google.com/p/discuz-friendconnect/downloads/list]. After unzipping it, it should look like this:
 <pre>
 .
 |
@@ -111,6 +111,6 @@ Please modify the coorsponding header.htm of the template.
 
 === Troubleshooting ===
 
-Please go to [http://code.google.com/p/google-friend-connect-plugins/issues/list] for help.
+Please go to [http://code.google.com/p/discuz-friendconnect/issues/list] for help.
 
-For more info, please refer to the manual: [http://code.google.com/p/google-friend-connect-plugins/wiki/Discuz_Manual_EN].
+For more info, please refer to the manual: [http://code.google.com/p/discuz-friendconnect/wiki/Discuz_Manual_EN].

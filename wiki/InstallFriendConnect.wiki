@@ -17,4 +17,4 @@ Follow the right set of instructions below:
   * WordPressPlugin
   * DrupalPlugin
   * PhpbbPlugin
-  * [http://code.google.com/p/google-friend-connect-plugins/wiki/Discuz_Install_EN Discuz Plugin]
+  * [http://code.google.com/p/discuz-friendconnect/wiki/Discuz_Install_EN Discuz Plugin]
