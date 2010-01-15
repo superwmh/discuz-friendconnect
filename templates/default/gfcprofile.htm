@@ -1,0 +1,96 @@
+{template header}
+
+<div class="float" id="floatlayout_gfcprofile" style="width: 600px; height: 800px;">
+  <div style="width: 1800px">
+  <div class="floatbox floatbox1">
+  <h3 class="float_ctrl">
+  <span>
+  <a href="javascript:;" class="float_close" onclick="floatwin('close_gfcprofile')" title="{lang close}">{lang close}</a>
+  </span>
+  </h3>
+  </div>
+  
+  <div class="floatbox floatbox1">
+    <h3 class="float_ctrl">
+    <span>
+    <a href="javascript:;" class="float_close" onclick="floatwin('close_gfcprofile')" title="{lang close}">{lang close}</a>
+    </span>
+    </h3>
+      <form method="post" name="gfcprofile" id="gfcprofileform" class="gateform" onsubmit="return updateGFCprofile();return false;" action="gfcprofile.php?action=update">
+      <h3 id="returnmessage4">$gfcprofile</h3>
+      <input type="hidden" name="referer" value="$referer" />
+        <div style="overflow:hidden">
+        <span id="activation_hidden">
+          <!--{if ($profilestatus & 1) != 0}-->
+          	<!--{if  $thum_url_before == "" }-->
+          	<!--{eval $thum_url_before="uc_server/avatar.php" }-->
+          	<!--{/if}-->
+            <label><em>$gfcthumbnail</em><input type="checkbox" name="profilethumbnail" id="profilethumbnail" value=1 checked></label><br/>
+            <img width="65" hight="65" src="$thum_url_before"> <img src="images/default/gfc_arrow.gif">  <img width="65" hight="65" src="$thum_url_after"><br/>
+          <!--{/if}-->
+          <!--{if ($profilestatus & 2) != 0}-->
+            <label><em>$gfcbio</em><input type="checkbox" name="profilebio" id="profilebio" value=1 checked></label><br/>
+            $bio_before <img src="images/default/gfc_arrow.gif"> $bio_after<br/>
+          <!--{/if}-->
+          <!--{if ($profilestatus & 4) != 0}-->
+            <label><em>$gfcurl</em><input type="checkbox" name="profileurl" id="profileurl" value=1 checked></label><br/>
+            $site_before <img src="images/default/gfc_arrow.gif"> $site_after<br/>
+          <!--{/if}-->
+          </span>
+       </div>
+        <p class="fsubmit">
+         <span id="info_a_btn">
+         <em>&nbsp;</em>
+         <button class="submit" id="profilesubmit" type="submit" name="regsubmit" value="true" tabindex="1">{lang submit}</button>
+          <button class="submit" id="profilecancell" type="button" name="cancel" value="true" tabindex="1" onclick="floatwin('close_gfcprofile')">{lang cancel}</button>
+         </span>
+        </p>
+      <p>$gfcprofilecomment</p>
+      </form>
+      </div>
+</div>
+
+<script type="text/javascript" reload="1">
+var pagescroll = new pagescroll_class('floatlayout_gfcprofile', 600, 400);
+{if empty($infloat)}
+  $('floatlayout_gfcprofile').scrollLeft = 600;
+{/if}
+document.body.focus();
+
+function updateGFCprofile() {
+  var url='gfcprofile.php?action=update';
+  var ajax = new createXMLHttpRequest();
+  ajax.onreadystatechange = function() {
+    if (ajax.readyState == 4) {
+      if (ajax.status == 200) {
+        if (ajax.responseText == "1") {
+          //update successfully
+        } else if (ajax.responseText == "0"){
+          alert(ajax.responseText);
+        } else {
+          alert(ajax.responseText);
+        }
+      }
+    }
+  }
+  if ($("profilethumbnail") && $("profilethumbnail").checked) {
+    url += "&profilethumbnail=1";
+  }
+  if ($("profilebio") && $("profilebio").checked) {
+    url += "&profilebio=1";
+  }
+  if ($("profileurl") && $("profileurl").checked) {
+    url += "&profileurl=1";
+  }
+  ajax.open("GET",url);
+  ajax.send(null);
+  floatwin('close_gfcprofile');
+  return false;
+}
+</script>
+
+{eval updatesession();}
+<!--{if empty($infloat)}-->
+  {subtemplate footer_nofloat}
+<!--{/if}-->
+{template footer}
